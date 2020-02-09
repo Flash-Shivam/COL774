@@ -1,4 +1,5 @@
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 x = np.loadtxt('./q4x.dat')
 y = np.loadtxt('./q4y.dat', dtype=str).reshape(-1,1)
@@ -88,7 +89,7 @@ print(sigma1)
 sig_inv = np.linalg.pinv(sigma)
 x1 = np.linspace(-2,0,80)
 
-x2 = ((mu_1[0]-mu_0[0])*sig_inv[0][0]*(2*x1-mu_0[0]-mu_1[0])+sig_inv[1][1]*(mu_0[1]-mu_1[1])*(mu_0[1]+mu_1[1])+(sig_inv[0][1]+sig_inv[1][0])*(x1*(mu_1[1]-mu_0[1])+(mu_0[0]*mu_0[1]-mu_1[0]*mu_1[1])))/(2*sig_inv[1][1]*(mu_0[1]-mu_1[1])+(sig_inv[0][1]+sig_inv[1][0])*(mu_0[0]-mu_1[0]))
+x2 = ((mu_1[0]-mu_0[0])*sig_inv[0][0]*(2*x1-mu_0[0]-mu_1[0])+sig_inv[1][1]*(mu_0[1]-mu_1[1])*(mu_0[1]+mu_1[1])+(sig_inv[0][1]+sig_inv[1][0])*(x1*(mu_1[1]-mu_0[1])+(mu_0[0]*mu_0[1]-mu_1[0]*mu_1[1]))+2*math.log(phi/(1-phi)))/(2*sig_inv[1][1]*(mu_0[1]-mu_1[1])+(sig_inv[0][1]+sig_inv[1][0])*(mu_0[0]-mu_1[0]))
 
 plt.scatter(e, e1, label= "Alaska", color= "blue", marker= "+", s=30)
 plt.scatter(e2, e3, label= "Canada", color= "red", marker= "*", s=30)
