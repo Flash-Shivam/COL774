@@ -9,6 +9,8 @@ x = (x - np.mean(x))/np.std(x)
 sigma = np.zeros((2,2),dtype=float)
 sigma0 = np.zeros((2,2),dtype=float)
 sigma1 = np.zeros((2,2),dtype=float)
+sig_inv = np.zeros((2,2),dtype=float)
+
 e = []
 e1 = []
 e3 = []
@@ -82,11 +84,20 @@ sigma1[0][1] = r1/(len(y)-count)
 sigma1[1][0] = r1/(len(y)-count)
 print(sigma1)
 
+
+sig_inv = np.linalg.pinv(sigma)
+x1 = np.linspace(-2,0,80)
+
+x2 = ((mu_1[0]-mu_0[0])*sig_inv[0][0]*(2*x1-mu_0[0]-mu_1[0])+sig_inv[1][1]*(mu_0[1]-mu_1[1])*(mu_0[1]+mu_1[1])+(sig_inv[0][1]+sig_inv[1][0])*(x1*(mu_1[1]-mu_0[1])+(mu_0[0]*mu_0[1]-mu_1[0]*mu_1[1])))/(2*sig_inv[1][1]*(mu_0[1]-mu_1[1])+(sig_inv[0][1]+sig_inv[1][0])*(mu_0[0]-mu_1[0]))
+
 plt.scatter(e, e1, label= "Alaska", color= "blue", marker= "+", s=30)
 plt.scatter(e2, e3, label= "Canada", color= "red", marker= "*", s=30)
+plt.plot(x1, x2, '-g', label='Decision Boundary')
 plt.xlabel('Fresh Water')
 plt.grid()
 plt.ylabel('Marine Water')
 plt.legend()
 plt.show()
+
+
 
