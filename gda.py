@@ -11,7 +11,8 @@ sigma = np.zeros((2,2),dtype=float)
 sigma0 = np.zeros((2,2),dtype=float)
 sigma1 = np.zeros((2,2),dtype=float)
 sig_inv = np.zeros((2,2),dtype=float)
-
+sig_inv1 = np.zeros((2,2),dtype=float)
+sig_inv0 = np.zeros((2,2),dtype=float)
 e = []
 e1 = []
 e3 = []
@@ -87,13 +88,23 @@ print(sigma1)
 
 
 sig_inv = np.linalg.pinv(sigma)
-x1 = np.linspace(-2,0,80)
+sig_inv0 = np.linalg.pinv(sigma0)
+sig_inv1 = np.linalg.pinv(sigma1)
+x1 = np.linspace(-1.5,-0.5,80)
+x4 = np.linspace(-1.5,-0.5,80)
+x3 = np.linspace(-0.5,3,80)
 
-x2 = ((mu_1[0]-mu_0[0])*sig_inv[0][0]*(2*x1-mu_0[0]-mu_1[0])+sig_inv[1][1]*(mu_0[1]-mu_1[1])*(mu_0[1]+mu_1[1])+(sig_inv[0][1]+sig_inv[1][0])*(x1*(mu_1[1]-mu_0[1])+(mu_0[0]*mu_0[1]-mu_1[0]*mu_1[1]))+2*math.log(phi/(1-phi)))/(2*sig_inv[1][1]*(mu_0[1]-mu_1[1])+(sig_inv[0][1]+sig_inv[1][0])*(mu_0[0]-mu_1[0]))
-
+x1, x3 = np.meshgrid(x1, x3)
+x2 = ((mu_1[0]-mu_0[0])*sig_inv[0][0]*(2*x4-mu_0[0]-mu_1[0])+sig_inv[1][1]*(mu_0[1]-mu_1[1])*(mu_0[1]+mu_1[1])+(sig_inv[0][1]+sig_inv[1][0])*(x4*(mu_1[1]-mu_0[1])+(mu_0[0]*mu_0[1]-mu_1[0]*mu_1[1]))+2*math.log(phi/(1-phi)))/(2*sig_inv[1][1]*(mu_0[1]-mu_1[1])+(sig_inv[0][1]+sig_inv[1][0])*(mu_0[0]-mu_1[0]))
+plt.contour(x1,x3,(0.5*((sig_inv1[0][0])*((x1-mu_1[0])**2) - (sig_inv0[0][0])*((x1-mu_0[0])**2) + (sig_inv1[1][1])*((x3-mu_1[1])**2) -
+          (sig_inv0[1][1])*((x3-mu_0[1])**2) + (sig_inv1[0][1]+sig_inv1[1][0])*(x1-mu_1[0])*(x3-mu_1[1]) - (sig_inv0[0][
+                                                                                                                1] +
+                                                                                                            sig_inv0[1][
+                                                                                                                0])*(
+                  x1-mu_0[0])*(x3-mu_0[1]))-math.log(phi/(1-phi))),[0])
 plt.scatter(e, e1, label= "Alaska", color= "blue", marker= "+", s=30)
 plt.scatter(e2, e3, label= "Canada", color= "red", marker= "*", s=30)
-plt.plot(x1, x2, '-g', label='Decision Boundary')
+plt.plot(x4, x2, '-g', label='Decision Boundary')
 plt.xlabel('Fresh Water')
 plt.grid()
 plt.ylabel('Marine Water')
