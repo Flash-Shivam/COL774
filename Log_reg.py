@@ -64,17 +64,25 @@ mean = np.mean(tmp1)
 variance = (np.std(tmp1))
 
 r = []
+r1 = []
 for i in range(0, m):
     x[i, 1] = (x[i, 1] - mean)/variance
-    r.append(x[i, 1])
+    if y[i] == 0:
+        r.append(x[i, 1])
+    else:
+        r1.append(x[i, 1])
 
 mean = np.mean(tmp2)
 variance = (np.std(tmp2))
 
 r2 = []
+r3 = []
 for i in range(0, m):
     x[i, 2] = (x[i, 2] - mean)/variance
-    r2.append(x[i, 2])
+    if y[i] == 0:
+        r2.append(x[i, 2])
+    else:
+        r3.append(x[i, 2])
 
 for i in range(0,m):
     x[i, 0] = 1
@@ -125,10 +133,19 @@ while not convergence:
     n_iter = n_iter + 1
     if n_iter > 10 or cost(theta,y,x,m,n) < 0.0001:
         convergence = not convergence
-    print(cost(theta,y,x,m,n), n_iter)
+    # print(cost(theta,y,x,m,n), n_iter)
 print(theta)
 
-
+plt.scatter(r, r2, label="Y1", color= "blue", marker= "+", s=30)
+plt.scatter(r1, r3, label="Y2", color= "red", marker= "*", s=30)
+plt.legend()
+plt.xlabel('X1')
+plt.ylabel('X2')
+x1 = np.linspace(-3,3,80)
+y1 = -(theta[0]+theta[1]*x1)/(theta[2])
+plt.plot(x1, y1, '-g', label='Decision Boundary')
+plt.grid()
+plt.show()
 
 
 
