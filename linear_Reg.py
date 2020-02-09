@@ -144,18 +144,16 @@ p = p/2
 zs = p
 
 fig = plt.figure(figsize=(7,7))
-ax = fig.gca(projection='3d')
-ax.plot_surface(xs, ys, zs, rstride=1, cstride=1,
-                cmap='viridis', edgecolor='none')
-
+ax = fig.gca()
+plt.contour(xs, ys, zs,cmap='viridis')
+ax.set_xlabel(r'$\theta_0$')
+ax.set_ylabel(r'$\theta_1$')
 for i in range(0,len(v1)):
     f1 = []
     f2 = []
-    f3 = []
     f1.append(v1[i])
     f2.append(v2[i])
-    f3.append(v3[i])
-    ax.plot(f1, f2, f3, color='orange', marker='.')
+    ax.plot(f1, f2, color='orange', marker='.')
     fig.tight_layout()
     fig.canvas.draw()
     time.sleep(0.005)
