@@ -1,7 +1,11 @@
 import numpy as np
+import time
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import axes3d
 import csv
+import plotly.graph_objects as go
 import seaborn as sns
+start_time = time.time()
 n = 1
 m = 100
 
@@ -23,7 +27,8 @@ learning_rate = 0.0015
 tmp = np.zeros(n+1,dtype=float)
 
 y = np.zeros(m, dtype=float)
-
+e = []
+e1 = []
 x = np.zeros((m, n+1), dtype=float)
 
 
@@ -41,6 +46,7 @@ with open(filename, 'r') as csvfile:
 
 for i in range(0, len(rows1)):
     y[i] = rows1[i][0]
+    e.append(y[i])
 
 condition = False
 
@@ -91,6 +97,10 @@ def hypo(theta, x, index, n):
 
 
 n_iter = 0
+v1 = []
+v2 = []
+v3 = []
+
 
 while not convergence:
     for i in range(0, n+1):
@@ -103,21 +113,54 @@ while not convergence:
         theta[i] = tmp[i]
     error = costfunc(theta, y, m, n)
     n_iter = n_iter + 1
+    v1.append(theta[0])
+    v2.append(theta[1])
+    v3.append(error)
+    # time.sleep(0.1)
     if error < 0.0001 or n_iter > 1000:
         convergence = not convergence
     # print(error)
 # print(r)
 print(theta)
 
+x1 = np.linspace(-2,5,70)
+plt.scatter(r, e, label="Wine", color= "blue", marker= "+", s=30)
+y1 = theta[1]*x1 + theta[0]
+plt.plot(x1, y1, '-g', label='Hypothesis Function')
+plt.xlabel('Acidity of wine')
+plt.grid()
+plt.ylabel('Density of Wine')
+plt.legend()
+plt.show()
 
+xs = np.linspace(0,2,20)
+ys = np.linspace(-1,1,20)
+xs, ys = np.meshgrid(xs,ys)
+p = 0
+for i in range(0, m):
+    p = p + (y[i]-(xs + ys*x[i, 1]))*(y[i]-(xs + ys*x[i, 1]))
 
+p = p/2
+zs = p
 
+fig = plt.figure(figsize=(7,7))
+ax = fig.gca(projection='3d')
+ax.plot_surface(xs, ys, zs, rstride=1, cstride=1,
+                cmap='viridis', edgecolor='none')
 
+for i in range(0,len(v1)):
+    f1 = []
+    f2 = []
+    f3 = []
+    f1.append(v1[i])
+    f2.append(v2[i])
+    f3.append(v3[i])
+    ax.plot(f1, f2, f3, color='orange', marker='.')
+    fig.tight_layout()
+    fig.canvas.draw()
+    time.sleep(0.005)
+    # print("Doing", i)
 
-
-
-
-
-
+plt.show()
 
 
