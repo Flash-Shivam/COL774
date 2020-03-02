@@ -12,6 +12,9 @@ with open(filename, 'r') as csvfile:
     for row in csvreader:
         rows.append(row)
 
+
+print("Rows Appended")
+
 for i in rows:
     p = (i[5]).split(" ")
     # print(p)
@@ -22,21 +25,19 @@ for i in rows:
             sample.append(j)
     x.append(sample)
 
+print("Vocab Formed")
 print(type(vocab[0]))
 
-unique_words = []
-print(len(vocab))
-
-unique_words = list(set(vocab))
-unique_words.sort()
-print(len(unique_words))
-v = len(unique_words)
 dict1 = {}
-count = 1
-for i in unique_words:
-    dict1[i] = count
-    count = count + 1
+
+for i in vocab:
+    c = len(dict1) + 1
+    dict1[i] = c
+
+print(len(dict1))
+v = len(dict1)
 m = len(rows)
+print("Dict Made")
 y = np.zeros(m,dtype=int)
 count = 0
 for j in range(0,len(rows)):
@@ -45,40 +46,45 @@ for j in range(0,len(rows)):
         count = count + 1
 
 phi = float(count)/float(m)
-l_phi = np.zeros(v, dtype=float)
-l_phi1 = np.zeros(v, dtype=float)
-for k in range(0,v):
-    count2 = 1
-    count3 = 1
-    count4 = v
-    count5 = v
-    for i in range(0,m):
-        n = len(x[i])
-        if y[i] == 1:
-            for j in range(0,n):
-                if dict1[x[i][j]] == k:
-                    count2 = count2 + 1
-            count4 = count4 + n
-        else:
-            for j in range(0,n):
-                if dict1[x[i][j]] == k:
-                    count3 = count3 + 1
-            count5 = count5 + n
-    l_phi[k] = float(count2)/float(count4)
-    l_phi1[k] = float(count3)/float(count5)
+print(phi,v)
 
-
-res = np.zeros(m,dtype=float)
-q = 0
+l_phi = np.ones(v, dtype=float)
+l_phi1 = np.ones(v, dtype=float)
+count1 = v
+count2 = v
 for i in range(0,m):
     n = len(x[i])
-    sum1 = 0
-    sum2 = 0
+    for j in range(0,n):
+        k = dict1[x[i][j]] - 1
+        if y[i] == 1:
+            l_phi[k] = l_phi[k] + 1
+        else:
+            l_phi1[k] = l_phi1[k] + 1
+    if y[i] == 1:
+        count1 = count1 + n
+    else:
+        count2 = count2 + n
+res1 = 1/float(count1)
+res2 = 1/float(count2)
+l_phi = np.dot(l_phi,res1)
+l_phi1 = np.dot(l_phi1,res2)
+
+res = np.zeros(m,dtype=float)
+q = 0.0
+
+
+print(c,d,c+d)
+for i in range(0,m):
+    n = len(x[i])
+    sum1 = 0.0
+    sum2 = 0.0
     for j in range(0,n):
         sum1 = sum1 + math.log(l_phi[j])
         sum2 = sum2 + math.log(l_phi1[j])
-    sum1 = phi*math.exp(sum1)
-    sum2 = (1-phi)*math.exp(sum2)
+    sum1 = float(phi*math.exp(sum1))
+    sum2 = float((1-phi)*math.exp(sum2))
+    if sum1 + sum2 == 0:
+        sum1 = 0.1
     res[i] = float(sum1)/float(sum1+sum2)
     if res[i] >= 0.5:
         res[i] = 1
