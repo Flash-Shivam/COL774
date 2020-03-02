@@ -73,7 +73,6 @@ res = np.zeros(m,dtype=float)
 q = 0.0
 
 
-print(c,d,c+d)
 for i in range(0,m):
     n = len(x[i])
     sum1 = 0.0
