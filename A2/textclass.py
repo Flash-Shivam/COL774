@@ -2,7 +2,7 @@ import csv
 import math
 import numpy as np
 
-
+# training.1600000.processed.noemoticon.csv
 x = []
 filename = "training.1600000.processed.noemoticon.csv"
 rows = []
@@ -17,10 +17,10 @@ m = len(rows)
 
 y = np.zeros(m,dtype=float)
 count = 0
-print("Rows Appended")
+# print("Rows Appended")
 di0 = dict()
 di1 = dict()
-di2 = dict()
+# di2 = dict()
 count1 = 0
 count2 = 0
 z = 0
@@ -53,14 +53,14 @@ for i in rows:
         count2 = count2 + len(p)
 
 
-print(len(di0),len(di1),len(set(vocab)),z)
+# print(len(di0),len(di1),len(set(vocab)),z)
 
 v = len(set(vocab))
 count1 = count1 + v
 count2 = count2 + v
 
 phi = float(count)/float(m)
-print(phi,v)
+# print(phi,v)
 
 
 res = np.zeros(m,dtype=float)
@@ -75,7 +75,7 @@ for i in range(0,m):
         sum2 = sum2 + math.log(di1.get(x[i][j],0)+1) - math.log(count2)
     sum1 = sum1 + math.log(phi)
     sum2 = sum2 + math.log(1-phi)
-    
+
     val = max(sum1,sum2)
     if val == sum1:
         res[i] = 1
@@ -84,6 +84,52 @@ for i in range(0,m):
     if y[i] == res[i]:
         q = q + 1
 
-print(res)
+# print(res)
 
-print(float(q)/float(m))
+print("Accuracy Over Train Data :" , float(100*q)/float(m))
+t = 0
+filename1 = "testdata.manual.2009.06.14.csv"
+rows1 = []
+with open(filename1, 'r', encoding='ISO-8859-1') as csvfile:
+    csvreader = csv.reader(csvfile)
+    for row in csvreader:
+        if row[0] == "4" or row[0] == "0":
+            t = t + 1
+            rows1.append(row)
+
+# print(t)
+
+y1 = np.zeros(t,dtype=float)
+c = 0
+x1 = []
+for i in rows1:
+    p = (i[5]).split()
+    x1.append(p)
+    if i[0] == "4":
+        y1[c] = 1.0
+    elif i[0] == "0":
+        y1[c] = 0.0
+    c = c+1
+
+# print(c,len(x1))
+q = 0.0
+res1 = np.zeros(m,dtype=float)
+for i in range(0,t):
+    n1 = len(x1[i])
+    sum1 = 0.0
+    sum2 = 0.0
+    for j in range(0,n1):
+        sum1 = sum1 + math.log(di0.get(x1[i][j],0)+1) - math.log(count1)
+        sum2 = sum2 + math.log(di1.get(x1[i][j],0)+1) - math.log(count2)
+    sum1 = sum1 + math.log(phi)
+    sum2 = sum2 + math.log(1-phi)
+
+    val = max(sum1,sum2)
+    if val == sum1:
+        res1[i] = 1
+    else:
+        res[i] = 0
+    if y1[i] == res1[i]:
+        q = q + 1
+
+print("Acurracy Over Test Data :",float(100*q)/float(t))
