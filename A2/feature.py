@@ -1,17 +1,21 @@
 import csv
 import math
 import numpy as np
-from nltk.tokenize import TweetTokenizer
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
 from sklearn.metrics import confusion_matrix
 import seaborn as sn
 import pandas as pd
 import matplotlib.pyplot as plt
 
-tknzr = TweetTokenizer()
-ps = PorterStemmer()
-stop_words = set(stopwords.words('english'))
+
+def convert_bigram(word_list):
+    l = len(word_list)
+    if l == 0 or l == 1:
+        return word_list
+    else:
+        res = []
+        for i in range(0,l-1):
+            res.append(word_list[i] + " " + word_list[i+1])
+        return res
 # training.1600000.processed.noemoticon.csv
 x = []
 filename = "training.1600000.processed.noemoticon.csv"
@@ -36,11 +40,8 @@ count2 = 0
 z = 0
 vocab = []
 for i in rows:
-    f_p = tknzr.tokenize(i[5])
-    # print(p)
-    p = [w for w in f_p if not w in stop_words]
-    for t in range(0,len(p)):
-        p[t] = ps.stem(p[t])
+    p = (i[5]).split()
+    p = convert_bigram(p)
     # print(p)
     x.append(p)
 
@@ -76,6 +77,7 @@ count2 = count2 + v
 phi = float(count)/float(m)
 # print(phi,v)
 
+
 t = 0
 filename1 = "testdata.manual.2009.06.14.csv"
 rows1 = []
@@ -87,16 +89,13 @@ with open(filename1, 'r', encoding='ISO-8859-1') as csvfile:
             rows1.append(row)
 
 # print(t)
-temp = t
+
 y1 = np.zeros(t,dtype=float)
 c = 0
 x1 = []
 for i in rows1:
-    f_p = tknzr.tokenize(i[5])
-    # print(p)
-    p = [w for w in f_p if not w in stop_words]
-    for t in range(0,len(p)):
-        p[t] = ps.stem(p[t])
+    p = (i[5]).split()
+    p = convert_bigram(p)
     x1.append(p)
     if i[0] == "4":
         y1[c] = 1.0
@@ -104,8 +103,7 @@ for i in rows1:
         y1[c] = 0.0
     c = c+1
 
-t = temp
-#print(c,len(x1))
+# print(c,len(x1))
 q = 0.0
 res1 = np.zeros(t,dtype=float)
 for i in range(0,t):

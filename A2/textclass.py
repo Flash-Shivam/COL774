@@ -117,7 +117,7 @@ for i in rows1:
 
 # print(c,len(x1))
 q = 0.0
-res1 = np.zeros(m,dtype=float)
+res1 = np.zeros(t,dtype=float)
 for i in range(0,t):
     n1 = len(x1[i])
     sum1 = 0.0
@@ -132,7 +132,7 @@ for i in range(0,t):
     if val == sum1:
         res1[i] = 1
     else:
-        res[i] = 0
+        res1[i] = 0
     if y1[i] == res1[i]:
         q = q + 1
 
