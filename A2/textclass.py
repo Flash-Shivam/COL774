@@ -1,6 +1,10 @@
 import csv
 import math
 import numpy as np
+from sklearn.metrics import confusion_matrix
+import seaborn as sn
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # training.1600000.processed.noemoticon.csv
 x = []
@@ -133,3 +137,17 @@ for i in range(0,t):
         q = q + 1
 
 print("Acurracy Over Test Data :",float(100*q)/float(t))
+
+y_True = []
+y_pred = []
+for i in range(0,t):
+    y_True.append(int(y1[i]))
+    y_pred.append(int(res1[i]))
+
+confusionmatrix = confusion_matrix(y_True,y_pred)
+print(confusionmatrix)
+df_cm = pd.DataFrame(confusionmatrix, index = ['Positive','Negative'],
+                  columns = ['Positive','Negative'])
+plt.figure(figsize = (10,7))
+sn.heatmap(df_cm, annot=True)
+plt.show()
