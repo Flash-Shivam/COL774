@@ -37,7 +37,9 @@ y = np.zeros(m,dtype='d')
 z = 0
 for i in range(0,len(rows)):
     if int(float(rows[i][784])) == 8 or int(float(rows[i][784])) == 9:
-        y[z] = float(int(float(rows[i][784])) - 8)
+        y[z] = (int(float(rows[i][784])) - 8)
+        if y[z] == 0:
+            y[z] = -1.0
         for j in range(0,n):
             x[z, j] = float(rows[i][j])/float(255)
         z = z + 1
@@ -78,7 +80,9 @@ z = 0
 for i in range(0,len(rows1)):
     if int(float(rows1[i][n])) == 8 or int(float(rows1[i][n])) == 9:
         # print(int(float(rows1[i][n])))
-        y1[z] = float(int(float(rows1[i][n])) - 8)
+        y1[z] = (int(float(rows1[i][n])) - 8)
+        if y1[z] == 0:
+            y1[z] = -1.0
         for j in range(0,n):
             x1[z, j] = float(rows1[i][j])/float(255)
         z = z + 1
