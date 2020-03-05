@@ -12,7 +12,7 @@ def convert_bigram(word_list):
     if l == 0 or l == 1:
         return word_list
     else:
-        res = []
+        res = word_list
         for i in range(0,l-1):
             res.append(word_list[i] + " " + word_list[i+1])
         return res
@@ -124,4 +124,4 @@ for i in range(0,t):
     if y1[i] == res1[i]:
         q = q + 1
 
-print("Acurracy Over Test Data :",float(100*q)/float(t))
+print("Accuracy Over Test Data :",float(100*q)/float(t))
