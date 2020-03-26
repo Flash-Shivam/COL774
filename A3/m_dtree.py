@@ -2,6 +2,7 @@ from scipy import stats
 import numpy as np
 import time
 from scipy.sparse import load_npz
+import matplotlib.pyplot as plt
 # Read sparse file
 x = load_npz('train_x.npz').toarray()
 
@@ -176,11 +177,6 @@ def grow_tree(data,label,h):
     return node
 
 
-start = time.process_time()
-root = grow_tree(x, y, 51)
-print(time.process_time()-start)
-
-
 def node_count(node):
     if node.leaf:
 
@@ -192,11 +188,6 @@ def node_height(node):
     if node.leaf:
         return 0
     return 1 + max(node_height(node.left), node_height(node.right))
-
-
-print(node_count(root))
-
-print(node_height(root))
 
 
 def predict(node, sample):
@@ -235,14 +226,73 @@ def cal_accuracy(data, label, node):
 train_acc = []
 test_acc = []
 valid_acc = []
-for i in range(30, 50, 2):
+num_nodes = []
+for i in range(1, 12, 1):
+    start = time.process_time()
     root = grow_tree(x, y, i)
+    print(time.process_time() - start)
     a1 = cal_accuracy(x, y, root)
     a2 = cal_accuracy(x_t, y2, root)
     a3 = cal_accuracy(x_v, y3, root)
+    num_nodes.append(node_count(root))
+    print(a1,a2,a3)
     train_acc.append(a1)
     test_acc.append(a2)
     valid_acc.append(a3)
+
+for i in range(12, 30, 2):
+    start = time.process_time()
+    root = grow_tree(x, y, i)
+    print(time.process_time() - start)
+    a1 = cal_accuracy(x, y, root)
+    a2 = cal_accuracy(x_t, y2, root)
+    a3 = cal_accuracy(x_v, y3, root)
+    num_nodes.append(node_count(root))
+    print(a1,a2,a3)
+    train_acc.append(a1)
+    test_acc.append(a2)
+    valid_acc.append(a3)
+
 print(train_acc)
 print(test_acc)
 print(valid_acc)
+print(num_nodes)
+
+plt.plot(num_nodes, train_acc, color='green', linestyle='dashed', linewidth=3, marker='o', markerfacecolor='blue',
+         markersize=10)
+
+plt.xlabel('Number of Nodes')
+# naming the y axis
+plt.ylabel('Accuracy')
+
+# giving a title to my graph
+plt.title('D-tree')
+
+# function to show the plot
+plt.show()
+
+plt.plot(num_nodes, test_acc, color='green', linestyle='dashed', linewidth=3, marker='o', markerfacecolor='blue',
+         markersize=10)
+
+plt.xlabel('Number of Nodes')
+# naming the y axis
+plt.ylabel('Accuracy')
+
+# giving a title to my graph
+plt.title('D-tree')
+
+# function to show the plot
+plt.show()
+
+plt.plot(num_nodes, valid_acc, color='green', linestyle='dashed', linewidth=3, marker='o', markerfacecolor='blue',
+         markersize=10)
+
+plt.xlabel('Number of Nodes')
+# naming the y axis
+plt.ylabel('Accuracy')
+
+# giving a title to my graph
+plt.title('D-tree')
+
+# function to show the plot
+plt.show()
