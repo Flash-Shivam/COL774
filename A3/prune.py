@@ -27,9 +27,9 @@ def read_label(name):
 
 y = read_label('train')
 
-y2 = np.array('test')
+y2 = read_label('test')
 
-y3 = np.array('valid')
+y3 = read_label('valid')
 
 
 class Node:
@@ -109,7 +109,7 @@ for i in range(0, len(x[0])):
 columns = np.array(d)
 
 
-def grow_tree(data,label,h):
+def grow_tree(data,label):
     if entropy(label) == 0 or h == 0:
         leaf = Node()
         leaf.set_leaf()
@@ -162,9 +162,9 @@ def grow_tree(data,label,h):
         x2 = np.where(data_x >= median)
         r_label = label[x2[0]]
 
-    left_node = grow_tree(l_data, l_label, h-1)
+    left_node = grow_tree(l_data, l_label)
 
-    right_node = grow_tree(r_data, r_label, h-1)
+    right_node = grow_tree(r_data, r_label)
 
     node = Node()
     node.set_index(index)
@@ -184,12 +184,6 @@ def node_count(node):
 
         return 1
     return 1 + node_count(node.left) + node_count(node.right)
-
-
-def node_height(node):
-    if node.leaf:
-        return 0
-    return 1 + max(node_height(node.left), node_height(node.right))
 
 
 def predict(node, sample):
@@ -225,7 +219,7 @@ def cal_accuracy(data, label, node):
     return np.sum(y5 == label)/n
 
 
-root = grow_tree(x, y, 50)
+root = grow_tree(x, y)
 
 print("Tree Grown")
 

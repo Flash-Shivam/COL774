@@ -28,9 +28,9 @@ def read_label(name):
 
 y = read_label('train')
 
-y2 = np.array('test')
+y2 = read_label('test')
 
-y3 = np.array('valid')
+y3 = read_label('valid')
 
 
 class Node:
