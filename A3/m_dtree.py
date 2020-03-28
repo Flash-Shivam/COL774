@@ -3,31 +3,34 @@ import numpy as np
 import time
 from scipy.sparse import load_npz
 import matplotlib.pyplot as plt
-# Read sparse file
-x = load_npz('train_x.npz').toarray()
-
-x_t = load_npz('test_x.npz').toarray()
-
-x_v = load_npz('valid_x.npz').toarray()
+PATH = '../data'
 
 
-f = open("train_y.txt", "r")
-contents = f.read()
-y1 = list(map(int, contents.split()))
+def read_data(name):
+    feature = load_npz(PATH + name + '_x.npz').toarray()
+    return feature
 
-y = np.array(y1)
 
-f = open("test_y.txt","r")
-contents = f.read()
-y1 = list(map(int, contents.split()))
+x = read_data('train')
 
-y2 = np.array(y1)
+x_t = read_data('test')
 
-f = open("valid_y.txt", "r")
-contents = f.read()
-y1 = list(map(int, contents.split()))
+x_v = read_data('valid')
 
-y3 = np.array(y1)
+
+def read_label(name):
+    f = open(PATH + name + "_y.txt", "r")
+    contents = f.read()
+    y1 = list(map(int, contents.split()))
+    y_prime = np.array(y1)
+    return y_prime
+
+
+y = read_label('train')
+
+y2 = np.array('test')
+
+y3 = np.array('valid')
 
 
 class Node:
@@ -169,7 +172,7 @@ def grow_tree(data,label,h):
     node.set_median(median)
     node.set_split(split)
     a, b = stats.mode(y)
-    node.set_label(b[0])
+    node.set_label(a[0])
 
     node.add_child(0, left_node)
     node.add_child(1, right_node)
@@ -296,3 +299,4 @@ plt.title('D-tree')
 
 # function to show the plot
 plt.show()
+
